@@ -4,18 +4,24 @@ package com.tgbotrix.Firstbot.model;
 import jakarta.persistence.*;
 import org.glassfish.grizzly.http.util.TimeStamp;
 
-@Entity(name = "usersDataTable")
+@Entity
+@Table(name = "users_of_tgbot")
 public class User {
     //jdbc:postgresql://localhost:5432/tg1_db
 
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", nullable = false)
     private Long id;
+    @Column(name = "chatid")
     private Long chatId;
-    private String firstname;
+    @Column(name = "firstname")
+    private String firstName;
+    @Column(name = "lastname")
     private String lastName;
+    @Column(name = "username")
     private String userName;
+    @Column(name = "registeredat")
     private TimeStamp registeredAt;
 
 
@@ -35,12 +41,12 @@ public class User {
         this.chatId = chatId;
     }
 
-    public String getFirstname() {
-        return firstname;
+    public String getFirstName() {
+        return firstName;
     }
 
-    public void setFirstname(String firstname) {
-        this.firstname = firstname;
+    public void setFirstName(String firstname) {
+        this.firstName = firstname;
     }
 
     public String getLastName() {
@@ -72,7 +78,7 @@ public class User {
         return "User{" +
                 "id=" + id +
                 ", chatId=" + chatId +
-                ", firstname='" + firstname + '\'' +
+                ", firstname='" + firstName + '\'' +
                 ", lastName='" + lastName + '\'' +
                 ", userName='" + userName + '\'' +
                 ", registeredAt=" + registeredAt +

@@ -3,6 +3,7 @@ package com.tgbotrix.Firstbot.service;
 import com.tgbotrix.Firstbot.config.BotConfig;
 import com.tgbotrix.Firstbot.model.User;
 import com.tgbotrix.Firstbot.model.UserRepository;
+import com.vdurmont.emoji.EmojiParser;
 import lombok.extern.slf4j.Slf4j;
 import org.glassfish.grizzly.http.util.TimeStamp;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,6 +19,7 @@ import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Slf4j
 @Component
@@ -72,25 +74,40 @@ public class TelegramBot extends TelegramLongPollingBot {
 
     private void registerUser(Message message) {
         if(userRepository.findById(message.getChatId()).isEmpty()) {
-            long chatId = message.getChatId();
+            var chatId = message.getChatId();
             var chat = message.getChat();
 
             User user = new User();
 
             user.setChatId(chatId);
-            user.setFirstname(chat.getFirstName());
+            user.setFirstName(chat.getFirstName());
             user.setLastName(chat.getLastName());
             user.setUserName(chat.getUserName());
             user.setRegisteredAt(new TimeStamp());
 
             userRepository.save(user);
+            sendMessage(chatId, user.getFirstName());
             log.info("user saved: " + user);
+            //getUserById(chatId, user.getId());
         }
     }
 
+//    private Optional<User> getIdByChatId(long chatId) {
+//        try {
+//            Optional<User> user = userRepository.findById(id);
+//            sendMessage(chatId,
+//                    user.toString());
+//            return user;
+//        } catch (Exception e) {
+//            sendMessage(chatId, "Some problem, happens");
+//        }
+//        return null;
+//    }
+
     private void startCommandReceived(long chatId, String name) {
 
-        String answer = "Hi, " + name + " nice to meet you!";
+        //String answer = "Hi, " + name + " nice to meet you!";
+        String answer = EmojiParser.parseToUnicode("Hi, " + name + " nice to meet you!" + ":wave:");
         sendMessage(chatId, answer);
 
         log.info("User received his name: " + name);
