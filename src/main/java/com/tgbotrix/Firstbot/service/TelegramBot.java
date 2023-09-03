@@ -19,7 +19,6 @@ import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 @Slf4j
 @Component
@@ -86,7 +85,6 @@ public class TelegramBot extends TelegramLongPollingBot {
             user.setRegisteredAt(new TimeStamp());
 
             userRepository.save(user);
-            sendMessage(chatId, user.getFirstName());
             log.info("user saved: " + user);
             //getUserById(chatId, user.getId());
         }

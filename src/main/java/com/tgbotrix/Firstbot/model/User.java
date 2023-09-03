@@ -5,14 +5,10 @@ import jakarta.persistence.*;
 import org.glassfish.grizzly.http.util.TimeStamp;
 
 @Entity
-@Table(name = "users_of_tgbot")
+@Table(name = "users_of_bot")
 public class User {
     //jdbc:postgresql://localhost:5432/tg1_db
-
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id", nullable = false)
-    private Long id;
     @Column(name = "chatid")
     private Long chatId;
     @Column(name = "firstname")
@@ -25,13 +21,6 @@ public class User {
     private TimeStamp registeredAt;
 
 
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public Long getId() {
-        return id;
-    }
 
     public Long getChatId() {
         return chatId;
@@ -76,7 +65,6 @@ public class User {
     @Override
     public String toString() {
         return "User{" +
-                "id=" + id +
                 ", chatId=" + chatId +
                 ", firstname='" + firstName + '\'' +
                 ", lastName='" + lastName + '\'' +
