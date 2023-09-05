@@ -58,11 +58,6 @@
 			<artifactId>emoji-java</artifactId>
 			<version>5.1.1</version>
 		</dependency>
-
-
-
-
-
 	</dependencies>
 
 	<build>

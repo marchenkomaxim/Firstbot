@@ -20,7 +20,8 @@ public class User {
     @Column(name = "registeredat")
     private TimeStamp registeredAt;
 
-
+    public User() {
+    }
 
     public Long getChatId() {
         return chatId;
