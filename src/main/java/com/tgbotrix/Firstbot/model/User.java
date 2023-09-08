@@ -4,6 +4,8 @@ package com.tgbotrix.Firstbot.model;
 import jakarta.persistence.*;
 import org.glassfish.grizzly.http.util.TimeStamp;
 
+import java.util.List;
+
 @Entity
 @Table(name = "users_of_bot")
 public class User {
@@ -20,7 +22,19 @@ public class User {
     @Column(name = "registeredat")
     private TimeStamp registeredAt;
 
+    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @JoinColumn(name = "tasksid") // указывает, что данный столбец в объекте-владельце
+    private List<Tasks> tasks;    //  ссылается на первичный ключ в ссылочном объекте
+
     public User() {
+    }
+
+    public List<Tasks> getTasks() {
+        return tasks;
+    }
+
+    public void setTasks(List<Tasks> tasks) {
+        this.tasks = tasks;
     }
 
     public Long getChatId() {

@@ -1,6 +1,8 @@
 package com.tgbotrix.Firstbot.service;
 
 import com.tgbotrix.Firstbot.config.BotConfig;
+import com.tgbotrix.Firstbot.model.Tasks;
+import com.tgbotrix.Firstbot.model.TasksRepository;
 import com.tgbotrix.Firstbot.model.User;
 import com.tgbotrix.Firstbot.model.UserRepository;
 import com.vdurmont.emoji.EmojiParser;
@@ -35,6 +37,8 @@ public class TelegramBot extends TelegramLongPollingBot {
 
     @Autowired
     private UserRepository userRepository;
+    @Autowired
+    private TasksRepository tasksRepository;
 
     final BotConfig config;
 
@@ -50,6 +54,7 @@ public class TelegramBot extends TelegramLongPollingBot {
         listOfCommands.add(new BotCommand("/deletedata", "delete your personal data"));
         listOfCommands.add(new BotCommand("/help", "info how to use this bot"));
         listOfCommands.add(new BotCommand("/settings", "set your preferences"));
+        listOfCommands.add(new BotCommand("/menu", "shows menu"));
         try {
             this.execute(new SetMyCommands(listOfCommands, new BotCommandScopeDefault(), null));
         } catch (TelegramApiException e) {
@@ -72,10 +77,10 @@ public class TelegramBot extends TelegramLongPollingBot {
                 case "/start" -> {
                     startCommandReceived(chatId, update.getMessage().getChat().getFirstName());
                     registerUser(update.getMessage());
-                    getKeyboard(chatId, update.getMessage().getChat().getFirstName());
                 }
                 case "/help" -> sendMessage(chatId, HELP_INFO);
                 case "/register" -> register(chatId);
+                case "/menu" -> getKeyboard(chatId);
                 default -> sendMessage(chatId, "Something goes wrong.");
             }
         } else if(update.hasCallbackQuery()) {
@@ -145,6 +150,16 @@ public class TelegramBot extends TelegramLongPollingBot {
         }
     }
 
+    private void addTask(User user, String taskName) {
+        Tasks tasks = new Tasks();
+
+        tasks.setTaskName(taskName);
+        tasks.setComplete(false);
+        tasks.setUser(user);
+
+        tasksRepository.save(tasks);
+    }
+
     private void startCommandReceived(long chatId, String name) {
         String answer = EmojiParser.parseToUnicode("Hi, " + name + " nice to meet you!" + ":wave:");
         sendMessage(chatId, answer);
@@ -160,16 +175,16 @@ public class TelegramBot extends TelegramLongPollingBot {
         executeMessage(message);
     }
 
-    private void getKeyboard(long chatId, String textToSend) {
+    private void getKeyboard(long chatId) {
         SendMessage message = new SendMessage();
         message.setChatId(String.valueOf(chatId));
-        message.setText(textToSend);
+        message.setText("Keyboard appeared");
 
         ReplyKeyboardMarkup replyKeyboardMarkup = new ReplyKeyboardMarkup();
         List<KeyboardRow> keyboardRows = new ArrayList<>();
 
         KeyboardRow row = new KeyboardRow();
-        row.add("weather");
+        row.add("/tasks");
         row.add(".....");
 
         keyboardRows.add(row);
